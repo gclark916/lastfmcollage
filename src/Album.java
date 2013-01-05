@@ -1,4 +1,6 @@
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +15,31 @@ public class Album {
 	String name;
 	String artist;
 	Image art;
+	int playcount;
+	
+	static class AlbumRunnable implements Runnable
+	{
+		JSONObject jsonAlbum;
+		BufferedImage collage;
+		int row;
+		int column;
+		
+		AlbumRunnable(JSONObject jsonAlbum, BufferedImage collage, int row, int column)
+		{
+			this.jsonAlbum = jsonAlbum;
+			this.collage = collage;
+			this.row = row;
+			this.column = column;
+		}
+
+		@Override
+		public void run() {
+			Album album = new Album(this.jsonAlbum);
+			Graphics2D collageG2D = collage.createGraphics();
+			collageG2D.drawImage(album.art, column * 300, row * 300, null);
+		}
+		
+	}
 	
 	Album(JSONObject jsonAlbum) {
 		// Album name
@@ -21,6 +48,9 @@ public class Album {
 		// Album artist
 		JSONObject jsonArtist = (JSONObject) jsonAlbum.get("artist");
 		this.artist = (String) jsonArtist.get("name");
+		
+		// Playcount
+		this.playcount = Integer.valueOf(((String) jsonAlbum.get("playcount")));
 		
 		// Album art
 		JSONArray jsonImageArray = (JSONArray) jsonAlbum.get("image");

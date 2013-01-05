@@ -1,4 +1,3 @@
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,8 +7,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
@@ -27,7 +28,8 @@ public class LastfmCollage {
 	 */
 	public static void main(String[] args) {
 		String username = "";
-		int rowCount = 3;
+		int rowCount = 0;
+		int colCount = 0;
 		TimePeriod period = TimePeriod.DAY7;
 		
 		for (int argIndex = 0, argCount = args.length; argIndex < argCount; argIndex++)
@@ -37,7 +39,6 @@ public class LastfmCollage {
 			{
 			case "-u":
 				username = args[argIndex+1];
-				argIndex++;
 				break;
 			case "-p":
 				String periodArg = args[argIndex+1];
@@ -66,55 +67,84 @@ public class LastfmCollage {
 				case "12month":
 					period = TimePeriod.MONTH12;
 					break;
-					
 				}
+				break;
+			case "-r":
+				rowCount = Integer.valueOf(args[argIndex+1]);
+				break;
+			case "-c":
+				colCount = Integer.valueOf(args[argIndex+1]);
+				break;
+			case "-k":
+				key = args[argIndex+1];
+				break;
 			}
 		}
-		
+
 		if (username.isEmpty())
 		{
 			System.err.print("No username given");
 			System.exit(-1);
 		}
+		
+		if (rowCount <= 0)
+		{
+			if (colCount <= 0)
+			{
+				rowCount = 3;
+				colCount = 3;
+			}
 			
+			rowCount = colCount;
+		}
+		else
+		{
+			if (colCount <= 0)
+				colCount = rowCount;
+		}
 		
 		parser = new JSONParser();
-		
-		int colCount = rowCount;
-		List<Album> albums = getTopAlbums(username, period, rowCount * colCount);
+		ExecutorService threadPool = Executors.newFixedThreadPool(16);
 		
 		BufferedImage collage = new BufferedImage(300 * colCount, 300 * rowCount, BufferedImage.TYPE_INT_RGB);
-		Graphics2D collageG2D = collage.createGraphics();
-		int rowIndex = 0;
-		int colIndex = 0;
-		for (Album album : albums)
+		
+		List<JSONObject> jsonAlbums = getTopAlbums(username, period, rowCount * colCount);
+		int row = 0;
+		int column = 0;
+		for (JSONObject jsonAlbum : jsonAlbums)
 		{
-			collageG2D.drawImage(album.art, colIndex * 300, rowIndex * 300, null);
-			colIndex++;
-			if (colIndex == colCount)
+			Runnable runnable = new Album.AlbumRunnable(jsonAlbum, collage, row, column);
+			column++;
+			if (column == colCount)
 			{
-				colIndex = 0;
-				rowIndex++;
+				column = 0;
+				row++;
 			}
+			threadPool.execute(runnable);
 		}
 		
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HHmmssSSS-zzz");
 		String formattedDate = formatter.format(new Date());
 		String filename = username + "-" + Integer.toString(rowCount) + "x" + Integer.toString(colCount) + "-" + period.lastfmString + "-" + formattedDate + ".jpg";
 		File imageFile = new File(filename);
+		threadPool.shutdown();
 		try {
+			threadPool.awaitTermination(2, TimeUnit.MINUTES);
 			ImageIO.write(collage, "JPG", imageFile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			imageFile.delete();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			imageFile.delete();
 		}
 	}
 
 	
-	static List<Album> getTopAlbums(String userName, TimePeriod period, int num)
+	static List<JSONObject> getTopAlbums(String userName, TimePeriod period, int num)
 	{
-		List<Album> albums = null;
-		
 		String url = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=" + userName + "&period=" + period.lastfmString + "&limit=" + Integer.toString(num) + "&api_key=" + key + "&format=json";
 		JSONObject json = getJson(url);
 		JSONObject topalbums = (JSONObject) json.get("topalbums");
@@ -126,13 +156,8 @@ public class LastfmCollage {
 			return null;
 		}
 		List<JSONObject> jsonAlbums = (JSONArray) topalbums.get("album");
-		albums =  new LinkedList<Album>();
-		for (JSONObject jsonAlbum : jsonAlbums)
-		{
-			Album album = new Album(jsonAlbum);
-			albums.add(album);
-		}
-		return albums;
+		
+		return jsonAlbums;
 	}
 	
 	public static JSONObject getJson(String url){
@@ -175,9 +200,5 @@ public class LastfmCollage {
     
 		return jsonObject;
  
-	}
-	
-	static class TopAlbums {
-		List<Album> topalbums;
 	}
 }
