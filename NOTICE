@@ -1,0 +1,7 @@
+Last.fm Collage
+Copyright 2013 Greg Clark 
+
+This software uses the JSON.simple library copyright Yidong Fang and Chris 
+Nokleberg. The JSON.simple library is licensed under the Apache 2.0 license, 
+included in the APACHE2.0 file. The source code for JSON.simple can be found 
+at http://code.google.com/p/json-simple/
