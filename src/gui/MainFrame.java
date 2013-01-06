@@ -39,10 +39,11 @@ public class MainFrame extends JFrame implements ActionListener {
 		switch (e.getActionCommand())
 		{
 		case "generate":
-			BufferedImage image = base.LastfmCollage.generateCollage();
+			base.LastfmCollage.generateCollage(imagePanel);
+			/*BufferedImage image = base.LastfmCollage.generateCollage();
 			LastfmCollage.collage = image;
             imagePanel.image = image;
-            imagePanel.repaint();
+            imagePanel.repaint();*/
             break;
 		case "save":
 			base.LastfmCollage.saveCollageToFile();

@@ -1,4 +1,6 @@
 package base;
+import gui.ImagePanel;
+
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -7,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,13 +27,15 @@ public class Album {
 		BufferedImage collage;
 		int row;
 		int column;
+		ImagePanel imagePanel;
 		
-		AlbumRunnable(JSONObject jsonAlbum, BufferedImage collage, int row, int column)
+		AlbumRunnable(JSONObject jsonAlbum, BufferedImage collage, int row, int column, ImagePanel imagePanel)
 		{
 			this.jsonAlbum = jsonAlbum;
 			this.collage = collage;
 			this.row = row;
 			this.column = column;
+			this.imagePanel = imagePanel;
 		}
 
 		@Override
@@ -38,8 +43,12 @@ public class Album {
 			Album album = new Album(this.jsonAlbum);
 			Graphics2D collageG2D = collage.createGraphics();
 			collageG2D.drawImage(album.art, column * 300, row * 300, 300, 300, null);
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					imagePanel.repaint();
+				}
+			});
 		}
-		
 	}
 	
 	Album(JSONObject jsonAlbum) {

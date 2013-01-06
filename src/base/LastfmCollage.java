@@ -1,4 +1,5 @@
 package base;
+import gui.ImagePanel;
 import gui.MainFrame;
 
 import java.awt.image.BufferedImage;
@@ -117,7 +118,56 @@ public class LastfmCollage {
 		mainFrame.setVisible(true);
 	}
 	
-	static public BufferedImage generateCollage() {
+	static class CollageGenerator implements Runnable {
+		ImagePanel imagePanel;
+		
+		CollageGenerator(ImagePanel imagePanel) {
+			this.imagePanel = imagePanel;
+		}
+		
+		@Override
+		// TODO: accessing and editing non-mutexed variables from a Runnable is a bad idea
+		public void run() {
+			ExecutorService threadPool = Executors.newFixedThreadPool(16);
+			
+			BufferedImage collage = new BufferedImage(300 * colCount, 300 * rowCount, BufferedImage.TYPE_INT_RGB);
+			imagePanel.image = collage;
+			
+			List<JSONObject> jsonAlbums = getTopAlbums(username, period, rowCount * colCount);
+			int row = 0;
+			int column = 0;
+			for (JSONObject jsonAlbum : jsonAlbums)
+			{
+				Runnable runnable = new Album.AlbumRunnable(jsonAlbum, collage, row, column, imagePanel);
+				column++;
+				if (column == colCount)
+				{
+					column = 0;
+					row++;
+				}
+				threadPool.execute(runnable);
+			}
+			
+			threadPool.shutdown();
+			try {
+				threadPool.awaitTermination(2, TimeUnit.MINUTES);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			LastfmCollage.collage = collage;
+		}
+		
+	}
+	
+	static public void generateCollage(ImagePanel imagePanel) {
+		CollageGenerator collageGenerator = new CollageGenerator(imagePanel);
+		Thread thread = new Thread(collageGenerator);
+		thread.start();
+	}
+	
+	/*static public BufferedImage generateCollage() {
 		ExecutorService threadPool = Executors.newFixedThreadPool(16);
 		
 		BufferedImage collage = new BufferedImage(300 * colCount, 300 * rowCount, BufferedImage.TYPE_INT_RGB);
@@ -127,7 +177,7 @@ public class LastfmCollage {
 		int column = 0;
 		for (JSONObject jsonAlbum : jsonAlbums)
 		{
-			Runnable runnable = new Album.AlbumRunnable(jsonAlbum, collage, row, column);
+			Runnable runnable = new Album.AlbumRunnable(jsonAlbum, collage, row, column, null);
 			column++;
 			if (column == colCount)
 			{
@@ -146,7 +196,7 @@ public class LastfmCollage {
 		}
 		
 		return collage;
-	}
+	}*/
 	
 	static public void saveCollageToFile()
 	{

@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class ImagePanel extends JPanel {
-	Image image;
+	public Image image;
 	
 	public ImagePanel(Image image) {
 	    this.image = image;
