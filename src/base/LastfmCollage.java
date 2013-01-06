@@ -1,3 +1,6 @@
+package base;
+import gui.MainFrame;
+
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,15 +25,20 @@ public class LastfmCollage {
 	
 	static String key = "d048f1e12a1c2039e45d9b94d622bc1e";
 	static JSONParser parser;
+	static String username = "";
+	static int rowCount = 0;
+	static int colCount = 0;
+	static TimePeriod period;
+	static BufferedImage collage;
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String username = "";
-		int rowCount = 0;
-		int colCount = 0;
-		TimePeriod period = TimePeriod.DAY7;
+		username = "";
+		rowCount = 0;
+		colCount = 0;
+		period = TimePeriod.DAY7;
 		
 		for (int argIndex = 0, argCount = args.length; argIndex < argCount; argIndex++)
 		{
@@ -104,6 +112,12 @@ public class LastfmCollage {
 		}
 		
 		parser = new JSONParser();
+		
+		MainFrame mainFrame = new MainFrame();
+		mainFrame.setVisible(true);
+	}
+	
+	static public BufferedImage generateCollage() {
 		ExecutorService threadPool = Executors.newFixedThreadPool(16);
 		
 		BufferedImage collage = new BufferedImage(300 * colCount, 300 * rowCount, BufferedImage.TYPE_INT_RGB);
@@ -123,19 +137,26 @@ public class LastfmCollage {
 			threadPool.execute(runnable);
 		}
 		
+		threadPool.shutdown();
+		try {
+			threadPool.awaitTermination(2, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return collage;
+	}
+	
+	static public void saveCollageToFile()
+	{
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HHmmssSSS-zzz");
 		String formattedDate = formatter.format(new Date());
 		String filename = username + "-" + Integer.toString(rowCount) + "x" + Integer.toString(colCount) + "-" + period.lastfmString + "-" + formattedDate + ".jpg";
 		File imageFile = new File(filename);
-		threadPool.shutdown();
 		try {
-			threadPool.awaitTermination(2, TimeUnit.MINUTES);
 			ImageIO.write(collage, "JPG", imageFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			imageFile.delete();
-		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			imageFile.delete();
