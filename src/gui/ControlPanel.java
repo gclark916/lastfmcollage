@@ -1,13 +1,13 @@
 package gui;
 
-import java.awt.Component;
-import java.awt.GridLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import base.LastfmCollage;
+
+@SuppressWarnings("serial")
 public class ControlPanel extends JPanel {
 	UsernameTextField usernameTextField;
 	TimePeriodChooserPanel timePeriodChooser;
@@ -20,13 +20,13 @@ public class ControlPanel extends JPanel {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		usernameTextField = new UsernameTextField("");
+		usernameTextField = new UsernameTextField(LastfmCollage.username);
 		this.add(usernameTextField);
 		
-		timePeriodChooser = new TimePeriodChooserPanel();
+		timePeriodChooser = new TimePeriodChooserPanel(LastfmCollage.period);
 		this.add(timePeriodChooser);
 		
-		dimensionsPanel = new DimensionsPanel(3, 3);
+		dimensionsPanel = new DimensionsPanel(LastfmCollage.rowCount, LastfmCollage.colCount);
 		this.add(dimensionsPanel);
 		
 		generateCollageButton = new JButton("Generate Collage");

@@ -4,12 +4,16 @@ import java.awt.Container;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JRadioButton;
 
+import base.LastfmCollage;
 
+
+@SuppressWarnings("serial")
 public class MainFrame extends JFrame implements ActionListener {
 	JRadioButton[] timePeriodButtons;
 	JButton generateCollageButton;
@@ -35,7 +39,8 @@ public class MainFrame extends JFrame implements ActionListener {
 		switch (e.getActionCommand())
 		{
 		case "generate":
-			Image image = base.LastfmCollage.generateCollage();
+			BufferedImage image = base.LastfmCollage.generateCollage();
+			LastfmCollage.collage = image;
             imagePanel.image = image;
             imagePanel.repaint();
             break;

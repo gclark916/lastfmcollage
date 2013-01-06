@@ -23,13 +23,13 @@ import org.json.simple.parser.ParseException;
 
 public class LastfmCollage {
 	
-	static String key = "d048f1e12a1c2039e45d9b94d622bc1e";
-	static JSONParser parser;
-	static String username = "";
-	static int rowCount = 0;
-	static int colCount = 0;
-	static TimePeriod period;
-	static BufferedImage collage;
+	public static String key = "d048f1e12a1c2039e45d9b94d622bc1e";
+	public static JSONParser parser;
+	public static String username = "";
+	public static int rowCount = 0;
+	public static int colCount = 0;
+	public static TimePeriod period;
+	public static BufferedImage collage;
 
 	/**
 	 * @param args
@@ -152,7 +152,7 @@ public class LastfmCollage {
 	{
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HHmmssSSS-zzz");
 		String formattedDate = formatter.format(new Date());
-		String filename = username + "-" + Integer.toString(rowCount) + "x" + Integer.toString(colCount) + "-" + period.lastfmString + "-" + formattedDate + ".jpg";
+		String filename = username + "-" + Integer.toString(rowCount) + "x" + Integer.toString(colCount) + "-" + period.getLastfmString() + "-" + formattedDate + ".jpg";
 		File imageFile = new File(filename);
 		try {
 			ImageIO.write(collage, "JPG", imageFile);
@@ -163,10 +163,9 @@ public class LastfmCollage {
 		}
 	}
 
-	
 	static List<JSONObject> getTopAlbums(String userName, TimePeriod period, int num)
 	{
-		String url = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=" + userName + "&period=" + period.lastfmString + "&limit=" + Integer.toString(num) + "&api_key=" + key + "&format=json";
+		String url = "http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=" + userName + "&period=" + period.getLastfmString() + "&limit=" + Integer.toString(num) + "&api_key=" + key + "&format=json";
 		JSONObject json = getJson(url);
 		JSONObject topalbums = (JSONObject) json.get("topalbums");
 		if (topalbums == null)

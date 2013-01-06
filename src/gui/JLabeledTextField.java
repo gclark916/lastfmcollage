@@ -4,6 +4,7 @@ import java.awt.*;
 
 /** A JPanel that combines a JLabel and a JTextField. */ 
 
+@SuppressWarnings("serial")
 public class JLabeledTextField extends JPanel {
 	private JLabel label;
 	private JTextField textField;

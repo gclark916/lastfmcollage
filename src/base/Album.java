@@ -37,7 +37,7 @@ public class Album {
 		public void run() {
 			Album album = new Album(this.jsonAlbum);
 			Graphics2D collageG2D = collage.createGraphics();
-			collageG2D.drawImage(album.art, column * 300, row * 300, null);
+			collageG2D.drawImage(album.art, column * 300, row * 300, 300, 300, null);
 		}
 		
 	}
