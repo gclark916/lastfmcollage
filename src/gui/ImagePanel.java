@@ -2,15 +2,39 @@ package gui;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.ImageObserver;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 @SuppressWarnings("serial")
 public class ImagePanel extends JPanel {
 	public Image image;
+	public ImageObserver imageObserver;
 	
-	public ImagePanel(Image image) {
+	public ImagePanel(final Image image) {
 	    this.image = image;
+	    
+	    imageObserver = new ImageObserver() {
+
+			@Override
+			public boolean imageUpdate(Image img, int infoflags, int x, int y,
+					int width, int height) {
+				
+				assert(img == image);
+				
+				if ((infoflags & SOMEBITS | FRAMEBITS | ALLBITS) != 0) {
+					SwingUtilities.invokeLater(new Runnable() {
+						public void run() {
+							repaint();
+						}
+					});
+				}
+				
+				return true;
+			}
+	    };
+	    
 	    this.setAlignmentX(CENTER_ALIGNMENT);
 	    this.setAlignmentY(CENTER_ALIGNMENT);
 	    setLayout(null);
@@ -35,5 +59,4 @@ public class ImagePanel extends JPanel {
 		  g.clearRect(scaledWidth, 0, this.getWidth()-scaledWidth, this.getHeight());
 		  g.clearRect(0, scaledHeight, this.getWidth(), this.getHeight()-scaledHeight);
 	  }
-
 }

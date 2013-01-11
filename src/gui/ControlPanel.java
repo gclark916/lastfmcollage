@@ -15,18 +15,23 @@ public class ControlPanel extends JPanel {
 	JButton generateCollageButton;
 	JButton saveCollageButton;
 	
-	public ControlPanel(MainFrame parent)
+	LastfmCollage lastfmCollage;
+	
+	public ControlPanel(MainFrame parent, LastfmCollage lastfmCollage)
 	{
 		super();
+		
+		this.lastfmCollage = lastfmCollage;
+		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		usernameTextField = new UsernameTextField(LastfmCollage.username);
+		usernameTextField = new UsernameTextField(lastfmCollage);
 		this.add(usernameTextField);
 		
-		timePeriodChooser = new TimePeriodChooserPanel(LastfmCollage.period);
+		timePeriodChooser = new TimePeriodChooserPanel(lastfmCollage);
 		this.add(timePeriodChooser);
 		
-		dimensionsPanel = new DimensionsPanel(LastfmCollage.rowCount, LastfmCollage.colCount);
+		dimensionsPanel = new DimensionsPanel(lastfmCollage);
 		this.add(dimensionsPanel);
 		
 		generateCollageButton = new JButton("Generate Collage");
@@ -45,6 +50,17 @@ public class ControlPanel extends JPanel {
 		this.add(emptyPanel);
 		
 		this.setBorder(BorderFactory.createTitledBorder(""));
+	}
+	
+	@Override
+	public void setEnabled(boolean b) {
+		usernameTextField.setEnabled(b);
+		timePeriodChooser.setEnabled(b);
+		dimensionsPanel.setEnabled(b);
+		generateCollageButton.setEnabled(b);
+		saveCollageButton.setEnabled(b);
+		
+		super.setEnabled(b);
 	}
 
 }

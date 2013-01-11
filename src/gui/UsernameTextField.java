@@ -12,8 +12,14 @@ import base.LastfmCollage;
 
 @SuppressWarnings("serial")
 public class UsernameTextField extends JTextField implements DocumentListener {
-	public UsernameTextField(String defaultUsername) {
-		super(defaultUsername);
+	
+	LastfmCollage lastfmCollage;
+	
+	public UsernameTextField(LastfmCollage lastfmCollage) {
+		super(lastfmCollage.username);
+		
+		this.lastfmCollage = lastfmCollage;
+		
 		this.getDocument().addDocumentListener(this);
 		this.setBorder(BorderFactory.createTitledBorder("Last.fm Username"));
 		this.setMaximumSize(new Dimension(200, 15));
@@ -23,7 +29,7 @@ public class UsernameTextField extends JTextField implements DocumentListener {
 	@Override
 	public void changedUpdate(DocumentEvent e) {
 		try {
-			LastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
+			lastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
 		} catch (BadLocationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -33,7 +39,7 @@ public class UsernameTextField extends JTextField implements DocumentListener {
 	@Override
 	public void insertUpdate(DocumentEvent e) {
 		try {
-			LastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
+			lastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
 		} catch (BadLocationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -43,7 +49,7 @@ public class UsernameTextField extends JTextField implements DocumentListener {
 	@Override
 	public void removeUpdate(DocumentEvent e) {
 		try {
-			LastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
+			lastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
 		} catch (BadLocationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

@@ -1,4 +1,5 @@
 package base;
+
 import gui.ImagePanel;
 
 import java.awt.Graphics2D;
@@ -43,7 +44,7 @@ public class Album {
 			Album album = new Album(this.jsonAlbum);
 			Graphics2D collageG2D = collage.createGraphics();
 			collageG2D.drawImage(album.art, column * 300, row * 300, 300, 300, null);
-			SwingUtilities.invokeLater(new Runnable() {
+			SwingUtilities.invokeLater(new Runnable () {
 				public void run() {
 					imagePanel.repaint();
 				}
