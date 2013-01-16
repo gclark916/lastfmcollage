@@ -5,16 +5,15 @@ import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import base.LastfmCollage;
 
 @SuppressWarnings("serial")
-public class DimensionsPanel extends JPanel implements DocumentListener {
-	JLabeledTextField rowTextField;
-	JLabeledTextField colTextField;
+public class DimensionsPanel extends JPanel implements ChangeListener {
+	LabeledSpinner rowSpinner;
+	LabeledSpinner colSpinner;
 	LastfmCollage lastfmCollage;
 	
 	public DimensionsPanel(LastfmCollage lastfmCollage)
@@ -25,16 +24,16 @@ public class DimensionsPanel extends JPanel implements DocumentListener {
 		
 		this.setLayout(new GridLayout(2, 1));
 		
-		rowTextField = new JLabeledTextField("Rows", Integer.toString(lastfmCollage.rowCount));
-		rowTextField.getJTextField().setMaximumSize(new Dimension(200, 15));
-		rowTextField.getJTextField().getDocument().addDocumentListener(this);
+		rowSpinner = new LabeledSpinner("Rows", lastfmCollage.rowCount);
+		rowSpinner.getSpinner().setMaximumSize(new Dimension(200, 15));
+		rowSpinner.getSpinner().addChangeListener(this);
 		
-		colTextField = new JLabeledTextField("Columns", Integer.toString(lastfmCollage.colCount));
-		colTextField.getJTextField().setMaximumSize(new Dimension(200, 15));
-		colTextField.getJTextField().getDocument().addDocumentListener(this);
+		colSpinner = new LabeledSpinner("Columns", lastfmCollage.colCount);
+		colSpinner.getSpinner().setMaximumSize(new Dimension(200, 15));
+		colSpinner.getSpinner().addChangeListener(this);
 		
-		this.add(rowTextField);
-		this.add(colTextField);
+		this.add(rowSpinner);
+		this.add(colSpinner);
 		
 		this.setMaximumSize(new Dimension(200, 40));
 		
@@ -43,39 +42,17 @@ public class DimensionsPanel extends JPanel implements DocumentListener {
 	
 	@Override
 	public void setEnabled(boolean b) {
-		rowTextField.setEnabled(b);
-		colTextField.setEnabled(b);
+		rowSpinner.setEnabled(b);
+		colSpinner.setEnabled(b);
 		
 		super.setEnabled(b);
 	}
 
 	@Override
-	public void changedUpdate(DocumentEvent arg0) {
-		updateDimension(arg0);
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent arg0) {
-		updateDimension(arg0);
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent arg0) {
-		updateDimension(arg0);
-	}
-	
-	private void updateDimension(DocumentEvent arg0) {
-		try {
-			if (arg0.getDocument().equals(rowTextField.getJTextField().getDocument()))
-				lastfmCollage.rowCount = Integer.valueOf(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
-			else 
-				lastfmCollage.colCount = Integer.valueOf(arg0.getDocument().getText(0, arg0.getDocument().getLength()));
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void stateChanged(ChangeEvent arg0) {
+		if (arg0.getSource().equals(rowSpinner.getSpinner())) 
+			lastfmCollage.rowCount = rowSpinner.getValue();
+		else
+			lastfmCollage.colCount = colSpinner.getValue();
 	}
 }

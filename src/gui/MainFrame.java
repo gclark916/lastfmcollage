@@ -123,12 +123,6 @@ public class MainFrame extends JFrame implements ActionListener {
 				break;
 			}
 		}
-
-		if (username.isEmpty())
-		{
-			System.err.print("No username given");
-			System.exit(-1);
-		}
 		
 		if (rowCount <= 0)
 		{
