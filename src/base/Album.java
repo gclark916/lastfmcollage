@@ -1,19 +1,20 @@
 package base;
 
-import gui.ImagePanel;
-
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import base.CollageUpdatedEvent.EventType;
 
 
 public class Album {
@@ -25,28 +26,30 @@ public class Album {
 	static class AlbumRunnable implements Runnable
 	{
 		JSONObject jsonAlbum;
-		BufferedImage collage;
+		Collage collage;
 		int row;
 		int column;
-		ImagePanel imagePanel;
+		Set<CollageListener> listeners;
 		
-		AlbumRunnable(JSONObject jsonAlbum, BufferedImage collage, int row, int column, ImagePanel imagePanel)
+		AlbumRunnable(JSONObject jsonAlbum, Collage collage, int row, int column, Set<CollageListener> listeners)
 		{
 			this.jsonAlbum = jsonAlbum;
 			this.collage = collage;
 			this.row = row;
 			this.column = column;
-			this.imagePanel = imagePanel;
+			this.listeners = listeners;
 		}
 
 		@Override
 		public void run() {
 			Album album = new Album(this.jsonAlbum);
-			Graphics2D collageG2D = collage.createGraphics();
+			Graphics2D collageG2D = collage.getImage().createGraphics();
 			collageG2D.drawImage(album.art, column * 300, row * 300, 300, 300, null);
 			SwingUtilities.invokeLater(new Runnable () {
 				public void run() {
-					imagePanel.repaint();
+					CollageUpdatedEvent event = new CollageUpdatedEvent(collage, EventType.UPDATED);
+					for (CollageListener listener : listeners) 
+						listener.collageUpdated(event);
 				}
 			});
 		}

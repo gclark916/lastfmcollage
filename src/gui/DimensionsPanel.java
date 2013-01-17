@@ -5,32 +5,23 @@ import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import base.LastfmCollage;
 
 @SuppressWarnings("serial")
-public class DimensionsPanel extends JPanel implements ChangeListener {
+public class DimensionsPanel extends JPanel {
 	LabeledSpinner rowSpinner;
 	LabeledSpinner colSpinner;
-	LastfmCollage lastfmCollage;
 	
-	public DimensionsPanel(LastfmCollage lastfmCollage)
+	public DimensionsPanel(int rowCount, int colCount)
 	{
 		super();
 		
-		this.lastfmCollage = lastfmCollage;
-		
 		this.setLayout(new GridLayout(2, 1));
 		
-		rowSpinner = new LabeledSpinner("Rows", lastfmCollage.rowCount);
+		rowSpinner = new LabeledSpinner("Rows", rowCount);
 		rowSpinner.getSpinner().setMaximumSize(new Dimension(200, 15));
-		rowSpinner.getSpinner().addChangeListener(this);
 		
-		colSpinner = new LabeledSpinner("Columns", lastfmCollage.colCount);
+		colSpinner = new LabeledSpinner("Columns", colCount);
 		colSpinner.getSpinner().setMaximumSize(new Dimension(200, 15));
-		colSpinner.getSpinner().addChangeListener(this);
 		
 		this.add(rowSpinner);
 		this.add(colSpinner);
@@ -39,7 +30,7 @@ public class DimensionsPanel extends JPanel implements ChangeListener {
 		
 		setBorder(BorderFactory.createTitledBorder("Dimensions"));
 	}
-	
+
 	@Override
 	public void setEnabled(boolean b) {
 		rowSpinner.setEnabled(b);
@@ -48,11 +39,17 @@ public class DimensionsPanel extends JPanel implements ChangeListener {
 		super.setEnabled(b);
 	}
 
-	@Override
-	public void stateChanged(ChangeEvent arg0) {
-		if (arg0.getSource().equals(rowSpinner.getSpinner())) 
-			lastfmCollage.rowCount = rowSpinner.getValue();
-		else
-			lastfmCollage.colCount = colSpinner.getValue();
+	/**
+	 * @return the rowSpinner
+	 */
+	public LabeledSpinner getRowSpinner() {
+		return rowSpinner;
+	}
+
+	/**
+	 * @return the colSpinner
+	 */
+	public LabeledSpinner getColSpinner() {
+		return colSpinner;
 	}
 }

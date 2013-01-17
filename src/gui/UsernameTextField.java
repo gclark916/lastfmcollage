@@ -8,51 +8,16 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
-import base.LastfmCollage;
+import base.CollageSettings;
 
 @SuppressWarnings("serial")
-public class UsernameTextField extends JTextField implements DocumentListener {
+public class UsernameTextField extends JTextField {
 	
-	LastfmCollage lastfmCollage;
-	
-	public UsernameTextField(LastfmCollage lastfmCollage) {
-		super(lastfmCollage.username);
+	public UsernameTextField(String username) {
+		super(username);
 		
-		this.lastfmCollage = lastfmCollage;
-		
-		this.getDocument().addDocumentListener(this);
 		this.setBorder(BorderFactory.createTitledBorder("Last.fm Username"));
 		this.setMaximumSize(new Dimension(200, 15));
 		this.setMinimumSize(new Dimension(150, 15));
-	}
-
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		try {
-			lastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
-		} catch (BadLocationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
-
-	@Override
-	public void insertUpdate(DocumentEvent e) {
-		try {
-			lastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
-		} catch (BadLocationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
-
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		try {
-			lastfmCollage.username = e.getDocument().getText(0, e.getDocument().getLength());
-		} catch (BadLocationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 	}
 }
