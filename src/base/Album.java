@@ -16,7 +16,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
 import org.json.simple.JSONArray;
@@ -114,7 +113,7 @@ public class Album {
 		String imageURL = (String) jsonImage.get("#text");
 		try {
 			URL url = new URL(imageURL);
-			this.art = ImageIO.read(url);
+			this.art = util.ImageIO.read(url);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

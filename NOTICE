@@ -5,3 +5,7 @@ This software uses the JSON.simple library copyright Yidong Fang and Chris
 Nokleberg. The JSON.simple library is licensed under the Apache 2.0 license, 
 included in the APACHE2.0 file. The source code for JSON.simple can be found 
 at http://code.google.com/p/json-simple/
+
+This software uses CMYKDemo software copyright 2011 Werner Randelshofer. 
+CMYKDemo is licensed under the Creative Commons Attribution 3.0, included in 
+the CMYKDemo-license.html file.
