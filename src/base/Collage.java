@@ -1,5 +1,6 @@
 package base;
 
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,13 +32,14 @@ public class Collage {
 		ExecutorService threadPool = Executors.newFixedThreadPool(16);
 		
 		setImage(new BufferedImage(300 * settings.colCount, 300 * settings.rowCount, BufferedImage.TYPE_INT_RGB));
+		image.createGraphics().setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		List<JSONObject> jsonAlbums = LastfmAPI.getTopAlbums(settings.key, settings.username, settings.period, settings.rowCount * settings.colCount);
 		int row = 0;
 		int column = 0;
 		for (JSONObject jsonAlbum : jsonAlbums)
 		{
-			Runnable runnable = new Album.AlbumRunnable(jsonAlbum, this, row, column, listeners);
+			Runnable runnable = new Album.AlbumRunnable(jsonAlbum, this, row, column, this.settings.drawText, listeners);
 			column++;
 			if (column == settings.colCount)
 			{

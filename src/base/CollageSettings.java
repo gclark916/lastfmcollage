@@ -7,12 +7,14 @@ public class CollageSettings {
 	public int rowCount;
 	public int colCount;
 	public TimePeriod period;
+	public boolean drawText;
 	
-	public CollageSettings(String username, int rowCount, int colCount, TimePeriod period, String key) {
+	public CollageSettings(String username, int rowCount, int colCount, TimePeriod period, boolean drawText, String key) {
 		this.username = username;
 		this.rowCount = rowCount;
 		this.colCount = colCount;
 		this.period = period;
+		this.drawText = drawText;
 		this.key = key;
 	}
 	
@@ -21,6 +23,7 @@ public class CollageSettings {
 		rowCount = 0;
 		colCount = 0;
 		period = TimePeriod.DAY7;
+		drawText = false;
 		key = "d048f1e12a1c2039e45d9b94d622bc1e";
 		
 		for (int argIndex = 0, argCount = args.length; argIndex < argCount; argIndex++)
@@ -68,6 +71,9 @@ public class CollageSettings {
 				break;
 			case "-k":
 				key = args[argIndex+1];
+				break;
+			case "n":
+				drawText = true;
 				break;
 			}
 		}

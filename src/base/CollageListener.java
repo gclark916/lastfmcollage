@@ -1,5 +1,5 @@
 package base;
 
 public interface CollageListener {
-	public void collageUpdated(CollageUpdatedEvent event);
+	public void collageUpdated(CollageEvent event);
 }

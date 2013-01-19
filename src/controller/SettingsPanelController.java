@@ -2,6 +2,8 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +19,7 @@ import gui.SettingsPanel;
 import base.CollageSettings;
 import base.TimePeriod;
 
-public class SettingsPanelController implements DocumentListener, ActionListener, ChangeListener {
+public class SettingsPanelController implements DocumentListener, ActionListener, ChangeListener, ItemListener {
 
 	static Map<String, TimePeriod> actionCommandsToTimePeriods;
 	static {
@@ -45,6 +47,7 @@ public class SettingsPanelController implements DocumentListener, ActionListener
 		}
 		this.settingsPanel.getDimensionsPanel().getRowSpinner().getSpinner().addChangeListener(this);
 		this.settingsPanel.getDimensionsPanel().getColSpinner().getSpinner().addChangeListener(this);
+		this.settingsPanel.getShowNamesCheckBox().addItemListener(this);
 	}
 
 	/* DocumentListener */
@@ -95,5 +98,15 @@ public class SettingsPanelController implements DocumentListener, ActionListener
 			settings.rowCount = settingsPanel.getDimensionsPanel().getRowSpinner().getValue();
 		else
 			settings.colCount = settingsPanel.getDimensionsPanel().getColSpinner().getValue();
+	}
+
+	/* ItemListener */
+	
+	@Override
+	public void itemStateChanged(ItemEvent arg0) {
+		if (arg0.getStateChange() == ItemEvent.SELECTED)
+			settings.drawText = true;
+		else
+			settings.drawText = false;
 	}
 }

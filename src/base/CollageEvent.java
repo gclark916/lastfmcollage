@@ -1,6 +1,6 @@
 package base;
 
-public class CollageUpdatedEvent {
+public class CollageEvent {
 	public enum EventType {
 		UPDATED, COMPLETE;
 	}
@@ -26,7 +26,7 @@ public class CollageUpdatedEvent {
 	 * @param collage
 	 * @param type
 	 */
-	public CollageUpdatedEvent(Collage collage, EventType type) {
+	public CollageEvent(Collage collage, EventType type) {
 		super();
 		this.collage = collage;
 		this.type = type;

@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import base.Collage;
 import base.CollageListener;
 import base.CollageSettings;
-import base.CollageUpdatedEvent;
+import base.CollageEvent;
 import gui.ImagePanel;
 import gui.MainFrame;
 
@@ -84,7 +84,7 @@ public class MainController implements ActionListener, CollageListener {
 	}
 
 	@Override
-	public void collageUpdated(CollageUpdatedEvent event) {
+	public void collageUpdated(CollageEvent event) {
 		ImagePanel imagePanel = mainFrame.getImagePanel();
 		imagePanel.image = event.getCollage().getImage();
 		mainFrame.getImagePanel().repaint();
