@@ -1,4 +1,4 @@
-package gui.swing;
+package gui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;

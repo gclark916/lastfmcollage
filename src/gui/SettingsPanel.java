@@ -1,4 +1,4 @@
-package gui.swing;
+package gui;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;

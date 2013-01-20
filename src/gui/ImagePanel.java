@@ -1,4 +1,4 @@
-package gui.swing;
+package gui;
 
 import java.awt.Graphics;
 import java.awt.Image;

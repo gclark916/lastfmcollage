@@ -1,6 +1,4 @@
-package controller.swing;
-
-import gui.swing.SettingsPanel;
+package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +15,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
-
+import gui.SettingsPanel;
 import base.CollageSettings;
 import base.TimePeriod;
 
