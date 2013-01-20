@@ -1,4 +1,4 @@
-package gui;
+package gui.swing;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;

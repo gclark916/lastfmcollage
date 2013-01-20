@@ -1,4 +1,4 @@
-package gui;
+package gui.swing;
 
 import java.awt.Font;
 import java.awt.GridLayout;

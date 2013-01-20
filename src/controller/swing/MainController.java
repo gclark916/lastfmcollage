@@ -1,4 +1,7 @@
-package controller;
+package controller.swing;
+
+import gui.swing.ImagePanel;
+import gui.swing.MainFrame;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,12 +9,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
+
 import base.Collage;
 import base.CollageListener;
 import base.CollageSettings;
 import base.CollageEvent;
-import gui.ImagePanel;
-import gui.MainFrame;
 
 public class MainController implements ActionListener, CollageListener {
 	SettingsPanelController settingsPanelController;
